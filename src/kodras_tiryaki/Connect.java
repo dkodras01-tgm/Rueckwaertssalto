@@ -31,7 +31,7 @@ public class Connect {
             conn = DriverManager.getConnection(url, user, password);
             System.out.println("Es wurde sich erfolgreich an der Datenbank:" + url + " angemeldet.");
         } catch (Exception e) {
-            System.err.println(e);
+            System.out.println("Error: " + e.getMessage());
         }
     }
     
