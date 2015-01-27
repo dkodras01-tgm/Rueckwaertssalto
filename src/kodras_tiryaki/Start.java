@@ -12,24 +12,47 @@ public class Start {
 	public static void main(String[] args) {
 		MyCLI cli = new MyCLI(args);
 		Connect con = new Connect(cli.getHost(), cli.getDB(), cli.getUser(), cli.getPasswd());
-		String query = "SELECT * FROM person;";
 		
+		getTableNames(con);
+		getColumnDefinitions(con, getTableNames(con).get(1));
+	}
+	
+	public static ArrayList<String> getTableNames(Connect con){
+		String query = "show tables;";
 		Statement st;
+		ArrayList<String> tablenames = new ArrayList<String>();
 		try {
-			st = Connect.conn.createStatement();
+			st = con.getConnection().createStatement();
 			ResultSet rs = st.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			ArrayList<String> colnames = new ArrayList<String>();
-			
-			int numberOfColumns = rsmd.getColumnCount();
-		    for (int i = 1; i <= numberOfColumns; i++) {
-		    	colnames.add(rsmd.getColumnName(i));
-		    }
-		    
+			while(rs.next()) {
+				tablenames.add(rs.getString(1));
+			}
 			rs.close();
 			rs = null;
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
+		return tablenames;
+	}
+	
+	public static ArrayList<ColumnDefinition> getColumnDefinitions(Connect con, String tableName) {
+		String query = "DESC " + tableName + ";";
+		Statement st;
+		ArrayList<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
+		try {
+			st = con.getConnection().createStatement();
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				ColumnDefinition columnDefinition = new ColumnDefinition(rs.getString(1), rs.getString(2),
+						rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+				columnDefinitions.add(columnDefinition);
+				System.out.println(columnDefinition);
+			}
+			rs.close();
+			rs = null;
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return columnDefinitions;
 	}
 }

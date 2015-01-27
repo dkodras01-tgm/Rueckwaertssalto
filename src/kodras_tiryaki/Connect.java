@@ -54,4 +54,8 @@ public class Connect {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Connection getConnection() {
+		return conn;
+	}
 }
