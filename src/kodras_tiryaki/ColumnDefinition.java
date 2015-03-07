@@ -73,5 +73,4 @@ public class ColumnDefinition {
 				+ ", NULL=" + NULL + ", KEY=" + KEY + ", DEFAULT=" + DEFAULT
 				+ ", EXTRA=" + EXTRA + "]";
 	}
-	
 }
